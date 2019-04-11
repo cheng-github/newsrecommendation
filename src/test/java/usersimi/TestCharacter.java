@@ -1,3 +1,5 @@
+package usersimi;
+
 import org.junit.Test;
 
 public class TestCharacter {

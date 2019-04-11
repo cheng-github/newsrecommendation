@@ -1,11 +1,11 @@
-import java.util.Comparator;
+package usersimi;
 
 public class SimilarUser implements Comparable<SimilarUser> {
 
     public String uuid;
     public float similarValue;
 
-    public SimilarUser(String uuid, int similarValue) {
+    public SimilarUser(String uuid, float similarValue) {
         this.uuid = uuid;
         this.similarValue = similarValue;
     }
@@ -13,9 +13,9 @@ public class SimilarUser implements Comparable<SimilarUser> {
     @Override
     public int compareTo(SimilarUser o) {
         if (this.similarValue - o.similarValue < 0)
-            return -1;
-        else
             return 1;
+        else
+            return -1;
     }
 
     public String getUuid() {

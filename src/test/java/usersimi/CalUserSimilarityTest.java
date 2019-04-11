@@ -1,13 +1,13 @@
+package usersimi;
+
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.junit.Test;
-import org.omg.PortableInterceptor.INACTIVE;
-import javax.jws.soap.SOAPBinding;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.*;
 
-public class CalSimilarityTest {
+public class CalUserSimilarityTest {
 
     @Test
     public void calSimilarity() {
@@ -15,20 +15,27 @@ public class CalSimilarityTest {
     }
 
     @Test
-    public void obtainItemUserMatrix()throws Exception{
+    public void obtainUserSimilarityMatrix()throws Exception{
         int fileNumCount = 0;
-        String prefix = "E:\\毕业设计分割的大文件\\";
-        String[] fileSubPaths = new String[]{"page_views-000.csv", "page_views-001.csv",
-//                "page_views-002.csv","page_views-003.csv", "page_views-004.csv",
-                /*  "page_views-005.csv","page_views-006.csv", "page_views-007.csv",
-                  "page_views-008.csv","page_views-009.csv", "page_views-010.csv",
-                  "page_views-011.csv","page_views-012.csv", "page_views-013.csv",
-                  "page_views-014.csv"*/
+//        String prefix = "E:\\毕业设计分割的大文件\\";
+//        String[] fileSubPaths = new String[]{
+////                "page_views-000.csv",
+//                "page_views-001.csv",
+////                "page_views-002.csv","page_views-003.csv", "page_views-004.csv",
+//                /*  "page_views-005.csv","page_views-006.csv", "page_views-007.csv",
+//                  "page_views-008.csv","page_views-009.csv", "page_views-010.csv",
+//                  "page_views-011.csv","page_views-012.csv", "page_views-013.csv",
+//                  "page_views-014.csv"*/
+//        };
+        String prefix = "F:\\毕业设计_Stuff\\movielens-ml-latest-small\\ml-latest-small\\";
+        String[] fileSubPaths = new String[]{
+                "ratings.csv"
         };
         for (int i = 0; i < fileSubPaths.length; i++) {
             Reader in = new FileReader(prefix + fileSubPaths[i]);
-            Iterable<CSVRecord> records = CSVFormat.DEFAULT.withHeader("uuid","document_id","timestamp","platform","geo_location",
-                    "traffic_source").parse(in);
+//            Iterable<CSVRecord> records = CSVFormat.DEFAULT.withHeader("uuid","document_id","timestamp","platform","geo_location",
+//                    "traffic_source").parse(in);
+            Iterable<CSVRecord> records = CSVFormat.DEFAULT.withHeader("userId","movieId","rating","timestamp").parse(in);
             int lineNumber = 0;
             for(CSVRecord csvRecord: records){
                 // 不添加第一行的数据
@@ -36,8 +43,10 @@ public class CalSimilarityTest {
                     lineNumber = 1;
                     continue;
                 }
-                News newItem = News.addNewsInfo(csvRecord.get("document_id"));
-                User.addUserInfo(csvRecord.get("uuid"), newItem);
+//                usersimi.News newItem = usersimi.News.addNewsInfo(csvRecord.get("document_id"));
+//                usersimi.User.addUserInfo(csvRecord.get("uuid"), newItem);
+                News newItem = News.addNewsInfo(csvRecord.get("movieId"));
+                User.addUserInfo(csvRecord.get("userId"), newItem);
             }
             System.out.println("当前第" + (++fileNumCount) + "个文件");
         }
@@ -49,8 +58,8 @@ public class CalSimilarityTest {
         }
         for (Map.Entry<String, User> entry: User.userIdORM.entrySet()){
             User user = entry.getValue();
-            for (int l = 0; l < 50; l++) {
-                // 对于每个用户，其中的五十个hash函数我们仅仅需要对每个hash函数去计算它们存在有新闻的行号，
+            for (int l = 0; l < 60; l++) {
+                // 对于每个用户，其中的60个hash函数我们仅仅需要对每个hash函数去计算它们存在有新闻的行号，
                 // 这样减少了计算量
                 for (News item :user.getReadList()){
                     if (minHash[user.getMatrixNumber()][l] > handleHashFunction(l, item.getMatrixNumber()))
@@ -69,32 +78,45 @@ public class CalSimilarityTest {
             }
         }
         // 找到相似度较高的用户,仅仅计算它们的相似度，然后得到一个相似度列表
-        Map<Integer, Integer> possibleResult = new HashMap<>();
-        for (int i = 0; i < User.userConstructSerialNumber; i++) {
-            for (int j = i + 1; j < User.userConstructSerialNumber; j++) {
-                for (int k = 0; k < 15; k++) {
-                    if (lshHash[i][k] == lshHash[j][k]){
-                        possibleResult.put(i, j);
-                        break;
+        for (int k = 0; k < 15; k++) {
+            Map<Integer, ArrayList<Integer>> valueSets = new HashMap<>();
+            for (int i = 0; i < User.userConstructSerialNumber; i++) {
+                if (!valueSets.containsKey(lshHash[i][k])){
+                    ArrayList<Integer> similarIdSet = new ArrayList<>();
+                    similarIdSet.add(i);
+                    valueSets.put(lshHash[i][k], similarIdSet);
+                }else {
+                    // 如果直接添加用户对的话，会导致后面的仅仅可以与前面单个用户建立相似，但这是与我们的预期不符的
+                    // 所以应该建立一个数组
+                    valueSets.get(lshHash[i][k]).add(i);
+                }
+            }
+            for (ArrayList<Integer> idSets: valueSets.values()) {
+                for (int i = 0;i < idSets.size() - 1; i++){
+                    for (int j = i + 1; j < idSets.size(); j++) {
+                        UserPair.addUserPair(idSets.get(i), idSets.get(j));
                     }
                 }
             }
         }
         // 计算相似性，将相似的结果都存入到用户对象里去
-        for (Map.Entry<Integer, Integer> entry: possibleResult.entrySet()) {
+        for (UserPair userPair: UserPair.userPairs) {
             int sameItemNum = 0;
-            int similarValue;
+            float similarValue;
             for (int i = 0; i < 60; i++) {
-                if (minHash[entry.getKey()][i] == minHash[entry.getValue()][i]){
+                if (minHash[userPair.getFirstMatrixId()][i] == minHash[userPair.getSecondMatrixId()][i]){
                     sameItemNum++;
                 }
             }
-            similarValue = sameItemNum/ (120 - sameItemNum );
+            // 去掉一些碰巧的hash到同样的lsh，以及一些相似度过低的用户，这里选择的是将0.1一下的用户去除掉
+            if (sameItemNum < 11)
+                continue;
+            similarValue = sameItemNum / (float)(120 - sameItemNum);
             // 除去相等的hash值那么剩下的行都是不相等的
-            User.userIdORM.get(User.uuidMatrix.get(entry.getKey()))
-                    .getSimilarList().add(new SimilarUser(User.uuidMatrix.get(entry.getValue()), similarValue));
-            User.userIdORM.get(User.uuidMatrix.get(entry.getValue()))
-                    .getSimilarList().add(new SimilarUser(User.uuidMatrix.get(entry.getKey()), similarValue));
+            User.userIdORM.get(User.uuidMatrix.get(userPair.getFirstMatrixId()))
+                    .getSimilarList().add(new SimilarUser(User.uuidMatrix.get(userPair.getSecondMatrixId()), similarValue));
+            User.userIdORM.get(User.uuidMatrix.get(userPair.getSecondMatrixId()))
+                    .getSimilarList().add(new SimilarUser(User.uuidMatrix.get(userPair.getFirstMatrixId()), similarValue));
         }
         // 根据相似用户生成推荐文章列表，不放到User对象中去了，先丢到一个Result对象中去得了
         List<RecomResult> recList = new ArrayList<>();
@@ -245,6 +267,15 @@ public class CalSimilarityTest {
 
         }
         return Integer.MAX_VALUE;
+    }
+
+    @Test
+    public void testBucketValue() {
+        int[] first = new int[]{1466, 332, 285, 366};
+        int[] second = new int[]{14, 2, 61, 0};
+        News.itemSerialNumber = 9066;
+        System.out.println(calBucketValue(first));
+        System.out.println(calBucketValue(second));
     }
 
     /**

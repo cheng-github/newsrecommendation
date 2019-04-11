@@ -1,3 +1,5 @@
+package usersimi;
+
 import org.junit.Test;
 
 import java.util.ArrayList;

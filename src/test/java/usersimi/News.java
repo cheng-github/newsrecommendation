@@ -1,3 +1,5 @@
+package usersimi;
+
 import java.util.HashMap;
 
 public class News {
