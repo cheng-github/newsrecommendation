@@ -4,4 +4,21 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+
+  <servlet>
+      <servlet-name>springmvc-app</servlet-name>
+      <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+      <init-param>
+          <param-name>contextConfigLocation</param-name>
+          <param-value>classpath:config/spring-mvc-config.xml</param-value>
+      </init-param>
+      <load-on-startup>1</load-on-startup>
+  </servlet>
+
+    <!--使用do避免静态资源被拦截-->
+  <servlet-mapping>
+      <servlet-name>springmvc-app</servlet-name>
+      <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+
 </web-app>
