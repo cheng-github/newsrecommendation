@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration status="OFF" monitorInterval="1800">
+    <properties>
+        <property name="LOG_HOME">/WEB-INF/logs</property>
+        <property name="FILE_NAME">finance-pay</property>
+    </properties>
+
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+        </Console>
+
+        <RollingFile name="Running-log" fileName="${LOG_HOME}/${FILE_NAME}.log"
+                     filePattern="${LOG_HOME}/$${date:yyyy-MM}/${FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz"
+                     immediateFlush="true">
+            <PatternLayout
+                    pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="20" />
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!--
+        additivity开启的话，由于这个logger也是满足root的，所以会被打印两遍
+        -->
+        <Logger name="cn.edu.usst.mapper" level="trace" additivity="false">
+            <AppenderRef ref="Console" />
+        </Logger>
+
+        <Root level="trace">
+            <!-- 这里是输入到文件，很重要-->
+            <AppenderRef ref="Running-log" />
+            <!-- 这里是输入到控制台-->
+            <AppenderRef ref="Console" />
+            <!--MyBatis 输出日志打印-->
+            <AppenderRef ref="" />
+        </Root>
+    </Loggers>
+</Configuration>
