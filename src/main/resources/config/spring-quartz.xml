@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--调度的类-->
+    <bean id="recJob" class="cn.edu.usst.quartz.GenerateRecommendation"></bean>
+
+    <!--Job内容的配置-->
+    <bean id="recommendationDetail"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="recJob" />
+        </property>
+        <property name="targetMethod">
+            <value>execute</value>
+        </property>
+    </bean>
+
+    <bean id="recommendationJobTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="recommendationDetail">
+        </property>
+        <property name="cronExpression">
+            <!-- 每2个小时 -->
+            <!--<value>0 0 0/2 * * ?</value>-->
+            <!-- 测试我们设置十五秒触发一次即可 -->
+            <value>0/15 * * * * ?</value>
+        </property>
+    </bean>
+
+    <!-- 启动触发器的配置 -->
+    <bean name="startQuertz" lazy-init="false" autowire="no"
+          class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="recommendationJobTrigger" />
+            </list>
+        </property>
+        <property name="configLocation" value="classpath:config/quartz.properties" />
+        <property name="autoStartup" value="true"/>
+    </bean>
+</beans>

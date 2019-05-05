@@ -1,40 +1,29 @@
-package itemsimi;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
-import org.junit.Test;
+package cn.edu.usst.algorithm.item;
 
-import java.io.FileReader;
-import java.io.Reader;
+import java.sql.Timestamp;
 import java.util.*;
 
+public class ItemSimilarity {
 
-public class CalItemSimilarity {
 
-    @Test
-    public void calItemSimilar() throws Exception{
-        int line_count = 0;
-        String filePath = "F:\\毕业设计_Stuff\\movielens-ml-latest-small\\ml-latest-small\\ratings.csv";
-        Reader in = new FileReader(filePath);
-        Iterable<CSVRecord> records = CSVFormat.DEFAULT.withHeader("userId","movieId","rating","timestamp").parse(in);
+    public static void calRecommendation(List<Map> clickLog){
         Map<String, ArrayList<News>> userClick = new HashMap<>();
-        for (CSVRecord csvRecord: records){
-            if (line_count == 0){
-                line_count = 1;
-                continue;
-            }
-            String itemId = csvRecord.get("movieId");
-            int timestamp = Integer.parseInt(csvRecord.get("timestamp"));
-            String userId = csvRecord.get("userId");
-            if (!userClick.containsKey(userId)){
-                News item = new News(itemId, timestamp);
+
+        for (Map map: clickLog) {
+            String userUUID = map.get("userUUID").toString();
+            String newsId = map.get("newsId").toString();
+            Long timestamp = ((Timestamp)map.get("timestamp")).getTime(); // 单位为mills不是s
+            if (!userClick.containsKey(userUUID)){
+                News item = new News(newsId, timestamp);
                 ArrayList<News> readList = new ArrayList<>();
                 readList.add(item);
-                userClick.put(userId, readList);
+                userClick.put(userUUID, readList);
             }else {
-                News item = new News(itemId, timestamp);
-                userClick.get(userId).add(item);
+                News item = new News(newsId, timestamp);
+                userClick.get(userUUID).add(item);
             }
         }
+
         // 针对读取出来的数据，我们对物品建立一个相似度列表
         HashMap<String, HashMap<String, Integer>> itemSimi = new HashMap<>();
         for (ArrayList<News> articleList: userClick.values()){
@@ -43,7 +32,7 @@ public class CalItemSimilarity {
                 for (int j = i + 1; j < articleList.size(); j++) {
                     News first = articleList.get(i);
                     News second = articleList.get(j);
-                    if (Math.abs(first.getTimeStamp() - second.getTimeStamp()) > 7200){
+                    if (Math.abs(first.getTimeStamp() - second.getTimeStamp()) > 7200000){
                         // 直接跳出循环，进行下一个比较
                         break;
                     }else {
@@ -55,6 +44,7 @@ public class CalItemSimilarity {
                 }
             }
         }
+
         // 根据这个相似度列表以及用户的阅读历史进行推荐，而且应该根据所有点击的权重去获取
         List<RecResult> recOutput = new ArrayList<>();
         for (Map.Entry<String, ArrayList<News>> entry: userClick.entrySet()){
@@ -91,6 +81,8 @@ public class CalItemSimilarity {
         }
         // 输出限制结果即可
         System.out.println("输出推荐结果完毕");
+
+
     }
 
 
@@ -99,7 +91,7 @@ public class CalItemSimilarity {
      * @param first
      * @param second
      */
-    private void putSimiInfo(News first, News second, HashMap<String, HashMap<String, Integer>> itemSimi){
+    private static void putSimiInfo(News first, News second, HashMap<String, HashMap<String, Integer>> itemSimi){
         if (!itemSimi.containsKey(first.getNewsId())){
             HashMap<String, Integer> simiSets = new HashMap<>();
             simiSets.put(second.getNewsId(), 1);
@@ -113,7 +105,5 @@ public class CalItemSimilarity {
             }
         }
     }
+
 }
-
-
-

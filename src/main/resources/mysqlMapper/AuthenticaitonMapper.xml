@@ -3,9 +3,9 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="cn.edu.usst.mapper.AuthenticationMapper">
+    <mapper namespace="cn.edu.usst.mapper.AuthenticationMapper">
 
-    <select id="checkUserExist" parameterType="java.util.Map" resultType="int">
+        <select id="checkUserExist" parameterType="java.util.Map" resultType="int">
         SELECT COUNT(1) FROM user WHERE
         username = #{username};
     </select>

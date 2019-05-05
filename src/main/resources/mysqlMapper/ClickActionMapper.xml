@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.usst.mapper.ClickActionMapper">
+
+    <insert id="addClickRecord" parameterType="java.util.Map">
+        INSERT INTO clicklog (user_uuid, news_id, timestamp, clicktime)
+        VALUES (#{useruuid}, #{newsid}, CURRENT_TIMESTAMP(), 1);
+    </insert>
+
+    <select id="checkClickRecord" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM clicklog WHERE
+        user_uuid = #{useruuid} AND news_id = #{newsid};
+    </select>
+
+    <update id="increaseClickTime" parameterType="java.util.Map">
+        UPDATE clicklog SET clicktime = clicktime + 1
+        WHERE user_uuid = #{useruuid} AND news_id = #{newsid};
+    </update>
+</mapper>

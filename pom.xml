@@ -55,6 +55,13 @@
           <version>2.9.1</version>
       </dependency>
 
+      <!-- SLF4J Bridge -->
+      <dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-slf4j-impl</artifactId>
+          <version>2.9.1</version>
+      </dependency>
+
     <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-csv -->
     <dependency>
         <groupId>org.apache.commons</groupId>
@@ -138,31 +145,73 @@
     <!-- web end -->
 
     <!-- shiro -->
-    <dependency>
-        <groupId>org.apache.shiro</groupId>
-        <artifactId>shiro-spring</artifactId>
-        <version>${shiro.version}</version>
-    </dependency>
+    <!--<dependency>-->
+        <!--<groupId>org.apache.shiro</groupId>-->
+        <!--<artifactId>shiro-spring</artifactId>-->
+        <!--<version>${shiro.version}</version>-->
+    <!--</dependency>-->
     <dependency>
         <groupId>org.apache.shiro</groupId>
         <artifactId>shiro-ehcache</artifactId>
         <version>${shiro.version}</version>
     </dependency>
+    <!--<dependency>-->
+        <!--<groupId>org.apache.shiro</groupId>-->
+        <!--<artifactId>shiro-core</artifactId>-->
+        <!--<version>${shiro.version}</version>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+        <!--<groupId>org.apache.shiro</groupId>-->
+        <!--<artifactId>shiro-web</artifactId>-->
+        <!--<version>${shiro.version}</version>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+        <!--<groupId>org.apache.shiro</groupId>-->
+        <!--<artifactId>shiro-quartz</artifactId>-->
+        <!--<version>${shiro.version}</version>-->
+    <!--</dependency>-->
+    <!-- https://mvnrepository.com/artifact/org.quartz-scheduler/quartz -->
     <dependency>
-        <groupId>org.apache.shiro</groupId>
-        <artifactId>shiro-core</artifactId>
-        <version>${shiro.version}</version>
+        <groupId>org.quartz-scheduler</groupId>
+        <artifactId>quartz</artifactId>
+        <version>2.2.1</version>
     </dependency>
+
+      <!--quartz 需要依赖spring context support-->
     <dependency>
-        <groupId>org.apache.shiro</groupId>
-        <artifactId>shiro-web</artifactId>
-        <version>${shiro.version}</version>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context-support</artifactId>
+        <version>${spring.version}</version>
     </dependency>
-    <dependency>
-        <groupId>org.apache.shiro</groupId>
-        <artifactId>shiro-quartz</artifactId>
-        <version>${shiro.version}</version>
-    </dependency>
+        <!--导入shiro-all是为了解决冲突问题-->
+      <!-- https://mvnrepository.com/artifact/org.apache.shiro/shiro-all -->
+      <dependency>
+          <groupId>org.apache.shiro</groupId>
+          <artifactId>shiro-all</artifactId>
+          <version>${shiro.version}</version>
+          <exclusions>
+              <exclusion>
+                  <groupId>org.apache.shiro</groupId>
+                  <artifactId>shiro-quartz</artifactId>
+              </exclusion>
+          </exclusions>
+      </dependency>
+
+
+      <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+          <version>1.6.1</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+          <version>1.6.1</version>
+          <scope>test</scope>
+      </dependency>
 
 
   </dependencies>

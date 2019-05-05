@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--<Configuration status="OFF" monitorInterval="1800">-->
-<Configuration status="OFF " monitorInterval="1800">
+<Configuration status="OFF" monitorInterval="1800">
     <properties>
         <property name="LOG_HOME">/WEB-INF/logs</property>
-        <property name="FILE_NAME">NONE</property>
+        <property name="FILE_NAME">finance-pay</property>
     </properties>
 
     <Appenders>
@@ -32,13 +32,13 @@
             <AppenderRef ref="Console" />
         </Logger>
 
-        <Root level="info">
+        <Root level="trace">
             <!-- 这里是输入到文件，很重要-->
             <AppenderRef ref="Running-log"/>
             <!-- 这里是输入到控制台-->
             <AppenderRef ref="Console" />
             <!-- MyBatis 输出日志打印 -->
-            <AppenderRef ref="" />
+            <!--<AppenderRef ref="" />-->
         </Root>
     </Loggers>
 </Configuration>
