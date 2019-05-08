@@ -7,4 +7,7 @@ public interface RecommendationMapper {
 
     List<Map> getUserClickData();
 
+    Integer checkRecomItem(Map map);
+
+    Integer addRecomItem(Map map);
 }

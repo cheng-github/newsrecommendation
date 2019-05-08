@@ -4,6 +4,8 @@ public class NewsListRequest {
     String requestType;
     String categoryName;
     Integer requestPageNumber;
+    Integer lastDays;
+    Integer minViews;
 
     public String getRequestType() {
         return requestType;
@@ -27,5 +29,21 @@ public class NewsListRequest {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public Integer getLastDays() {
+        return lastDays;
+    }
+
+    public void setLastDays(Integer lastDays) {
+        this.lastDays = lastDays;
+    }
+
+    public Integer getMinViews() {
+        return minViews;
+    }
+
+    public void setMinViews(Integer minViews) {
+        this.minViews = minViews;
     }
 }

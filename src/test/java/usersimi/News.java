@@ -23,7 +23,7 @@ public class News {
         }
     }
 
-    private News(String documentId) {
+    public News(String documentId) {
         this.document_id = documentId;
         matrixNumber = itemSerialNumber++;
     }

@@ -26,5 +26,46 @@
       WHERE content_id = #{newsid};
     </select>
 
+    <select id="getNewsListByCategory" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT newsurl_id, news_title, comment_num, publish_time, view_count
+        FROM newsurl_list_tencent
+        WHERE is_ztlink = '0'
+        AND main_category = #{category}
+        AND publish_time BETWEEN DATE_SUB(NOW(), INTERVAL 6 DAY) AND NOW()
+        AND view_count > 10000
+        ORDER BY publish_time DESC
+        LIMIT #{offset}, 15
+    </select>
+
+    <select id="getTotalNumByCategory" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM newsurl_list_tencent
+        WHERE is_ztlink = '0'
+        AND main_category = #{category}
+        AND publish_time BETWEEN DATE_SUB(NOW(), INTERVAL 6 DAY) AND NOW()
+        AND view_count > 10000
+    </select>
+
+    <!-- 我们从视图中获取到推荐的结果 -->
+    <select id="getRecommendationNewsList" parameterType="java.lang.String" resultType="java.util.Map">
+      SELECT newsurl_id, news_title, comment_num, publish_time, view_count
+      FROM recomnewslist
+      WHERE user_uuid = #{userUUID}
+    </select>
+
+    <select id="getTotalNumRecom" parameterType="java.lang.String" resultType="java.lang.Integer">
+      SELECT COUNT(1)
+      FROM recomnewslist
+      WHERE user_uuid = #{userUUID}
+    </select>
+
+    <select id="getHotDataForRemcom" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT newsurl_id, news_title, comment_num, publish_time, view_count
+        FROM newsurl_list_tencent
+        WHERE is_ztlink = '0'
+        AND publish_time BETWEEN DATE_SUB(NOW(), INTERVAL 6 DAY) AND NOW()
+        ORDER BY view_count DESC
+        LIMIT #{offset}, #{datanum}
+    </select>
 
 </mapper>

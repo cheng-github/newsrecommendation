@@ -8,4 +8,16 @@
         SELECT user_uuid as userUUID, news_id as newsId, timestamp FROM clicklog
     </select>
 
+    <!-- 对于重复的数据不予添加的推荐列表里去 -->
+    <select id="checkRecomItem" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM recomlist
+        WHERE user_uuid = #{userUUID}
+        AND news_id = #{newsId};
+    </select>
+
+    <insert id="addRecomItem" parameterType="java.util.Map">
+      INSERT INTO recomlist (user_uuid, news_id, source, is_click, createtime)
+      VALUES (#{userUUID}, #{newsId}, #{source}, '0', NOW());
+    </insert>
+
 </mapper>

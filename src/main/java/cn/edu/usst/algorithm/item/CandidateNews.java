@@ -30,4 +30,10 @@ public class CandidateNews implements Comparable<CandidateNews>{
     public int compareTo(CandidateNews o) {
         return o.getWeight() - this.getWeight();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        CandidateNews candidateNews = (CandidateNews)obj;
+        return this.newsId.equals(candidateNews.getNewsId());
+    }
 }

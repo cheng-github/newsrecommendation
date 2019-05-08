@@ -11,4 +11,13 @@ public interface NewsInfoMapper {
 
     Map getNewsDetail(String newsid);
 
+    List<Map> getNewsListByCategory(Map map);
+
+    Integer getTotalNumByCategory(Map map);
+
+    List<Map> getRecommendationNewsList(String userUUID);
+
+    Integer getTotalNumRecom(String userUUID);
+
+    List<Map> getHotDataForRemcom(Map map);
 }

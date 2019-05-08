@@ -18,4 +18,14 @@ public class AlgorithmServiceImp implements AlgorithmService {
     public List<Map> getUserClickData() {
         return recommendationMapper.getUserClickData();
     }
+
+    @Override
+    public Integer addRecomItem(Map map) {
+        if (recommendationMapper.checkRecomItem(map) < 1){
+            recommendationMapper.addRecomItem(map);
+            return 1;
+        }
+        else
+            return 0;
+    }
 }

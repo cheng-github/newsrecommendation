@@ -12,4 +12,14 @@ public interface NewsInfoService {
     Integer getTotalHomePageNumber();
 
     Map getNewsDetail(String newsid);
+
+    List<Map> getNewsListByCategory(NewsListRequest newsListRequest);
+
+    Integer getTotalNumByCategory(NewsListRequest newsListRequest);
+
+    List<Map> getRecommendationNewsList(String userUUID);
+
+    Integer getTotalNumRecom(String userUUID);
+
+    List<Map> getHotDataForRemcom(Map map);
 }

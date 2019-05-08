@@ -55,4 +55,37 @@ public class NewsInfoImp implements NewsInfoService {
         result.put("sections", sections);
         return result;
     }
+
+    @Override
+    public List<Map> getNewsListByCategory(NewsListRequest newsListRequest) {
+        Map param = new HashMap();
+        param.put("category", newsListRequest.getCategoryName());
+        Integer offset = newsListRequest.getRequestPageNumber() * 15;
+        param.put("offset", offset);
+        // Todo:
+        // 根据不同类型去调整最小阅读量以及近期天数
+        return newsInfoMapper.getNewsListByCategory(param);
+    }
+
+    @Override
+    public Integer getTotalNumByCategory(NewsListRequest newsListRequest) {
+        Map param = new HashMap();
+        param.put("category", newsListRequest.getCategoryName());
+        return newsInfoMapper.getTotalNumByCategory(param);
+    }
+
+    @Override
+    public List<Map> getRecommendationNewsList(String userUUID) {
+        return newsInfoMapper.getRecommendationNewsList(userUUID);
+    }
+
+    @Override
+    public Integer getTotalNumRecom(String userUUID) {
+        return newsInfoMapper.getTotalNumRecom(userUUID);
+    }
+
+    @Override
+    public List<Map> getHotDataForRemcom(Map map) {
+        return newsInfoMapper.getHotDataForRemcom(map);
+    }
 }

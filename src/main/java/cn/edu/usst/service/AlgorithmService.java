@@ -9,4 +9,6 @@ import java.util.Map;
 public interface AlgorithmService {
 
     List<Map> getUserClickData();
+
+    Integer addRecomItem(Map map);
 }
