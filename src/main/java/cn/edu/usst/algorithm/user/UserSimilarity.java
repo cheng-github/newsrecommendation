@@ -2,9 +2,11 @@ package cn.edu.usst.algorithm.user;
 
 import cn.edu.usst.service.AlgorithmService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+@Component
 public class UserSimilarity {
 
     @Autowired

@@ -1,5 +1,7 @@
 package cn.edu.usst.algorithm.user;
 
+
+
 public class SimilarUser implements Comparable<SimilarUser> {
 
     public String uuid;

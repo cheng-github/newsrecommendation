@@ -6,8 +6,6 @@ import cn.edu.usst.service.AlgorithmService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +15,11 @@ public class GenerateRecommendation {
 
     @Autowired
     AlgorithmService algorithmService;
+    @Autowired
+    ItemSimilarity itemSimilarity;
+    @Autowired
+    UserSimilarity userSimilarity;
+
 
     public void execute() {
         long start = System.currentTimeMillis();
@@ -28,10 +31,10 @@ public class GenerateRecommendation {
         }*/
         // 将结果给到item和user去使用当做计算
         long startItem = System.currentTimeMillis();
-        ItemSimilarity itemSimilarity = new ItemSimilarity();
+//        ItemSimilarity itemSimilarity = new ItemSimilarity();
         itemSimilarity.calRecommendation(logResult);
         long endItem = System.currentTimeMillis();
-        UserSimilarity userSimilarity = new UserSimilarity();
+//        UserSimilarity userSimilarity = new UserSimilarity();
         userSimilarity.calUserSimilarity(logResult);
         long endUser = System.currentTimeMillis();
         long end = System.currentTimeMillis();

@@ -2,10 +2,13 @@ package cn.edu.usst.algorithm.item;
 
 import cn.edu.usst.service.AlgorithmService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.*;
 
+@Component
 public class ItemSimilarity {
 
     @Autowired

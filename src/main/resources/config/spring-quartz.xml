@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--<mvc:annotation-driven/>-->
+    <context:component-scan base-package="cn.edu.usst.algorithm"/>
 
     <!--调度的类-->
     <bean id="recJob" class="cn.edu.usst.quartz.GenerateRecommendation"></bean>
@@ -25,7 +29,7 @@
             <!-- 每2个小时 -->
             <!--<value>0 0 0/4 * * ?</value>-->
             <!-- 测试我们设置每五秒触发一次即可 -->
-            <value>0 0/5 * * * ?</value>
+            <value>0 0/1 * * * ?</value>
         </property>
     </bean>
 
